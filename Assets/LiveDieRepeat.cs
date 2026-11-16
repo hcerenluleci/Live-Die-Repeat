@@ -9,15 +9,23 @@ using UnityEngine.SceneManagement;
 ///  - Her ölüm "Hafıza" seviyesini artırır; LdrFener bunu fener menzili için kullanır
 ///    (ne kadar çok ölürsen zindanı o kadar iyi hatırlarsın = ışığın büyür).
 /// </summary>
+// =====================================================================================
+// MEKANİK 1: ÖLÜM DÖNGÜSÜ VE KALICI İLERLEME  (Hülya Ceren Lüleci)
+// Akış: oyuncunun canı 0 olur -> LdrOyun.OyuncuOldu() -> LiveDieRepeat.ReportDeath()
+//       -> RegisterDeath(): ölüm sayısı +1, PlayerPrefs'e kaydedilir, OnDeath olayı tetiklenir
+//       -> LdrMenu.OlumOldu(): bu yaşamın ruhu toplam ruha eklenir, puan tablosuna yazılır
+//       -> 2,5 sn "ÖLDÜN" ekranı -> Restart(): sahne baştan yüklenir (zindan yeniden kurulur).
+// Kalıcı kalanlar (oyun kapansa bile): ölüm sayısı, toplam ruh, açılan silahlar, en derin bölüm, kaçış parçaları.
+// =====================================================================================
 public class LiveDieRepeat : MonoBehaviour
 {
-    const string DeathKey = "LDR_Deaths";
+    const string DeathKey = "LDR_Deaths";          // ölüm sayısının PlayerPrefs'teki anahtarı (kalıcı kayıt)
     const string GameSceneKeyword = "MainGame";   // MainGameScene içinde çalışır
-    const int MaxMemory = 10;
+    const int MaxMemory = 10;                      // fener en fazla 10 ölüme kadar büyür
 
     public static LiveDieRepeat Instance { get; private set; }
     public static int Deaths { get; private set; }
-    public static int MemoryLevel => Mathf.Min(Deaths, MaxMemory);
+    public static int MemoryLevel => Mathf.Min(Deaths, MaxMemory);   // "hafıza": ölüm sayısı (en çok 10); LdrFener ışık menzilini buna göre büyütür
 
     [Header("Ayarlar")]
     [Tooltip("Oyuncu nesnesinin adında geçen yazı (Hierarchy'de 'Yasayan(Clone)' görünüyor)")]
@@ -28,7 +36,7 @@ public class LiveDieRepeat : MonoBehaviour
     public float restartDelay = 2.5f;
 
     public static bool Dying { get { return Instance != null && Instance.dying; } }
-    public static event System.Action OnDeath;
+    public static event System.Action OnDeath;     // ölüm anında haber verilir (LdrMenu bunu dinleyip ruhu kaydeder)
 
     GameObject player;
     bool seenPlayer;
@@ -38,6 +46,8 @@ public class LiveDieRepeat : MonoBehaviour
     float dyingTimer;
     GUIStyle hudStyle, bigStyle, smallStyle;
 
+    // Oyun açılırken kendini otomatik oluşturur; sahneye elle eklemeye gerek yok.
+    // DontDestroyOnLoad: sahne yeniden yüklense de bu nesne (ve ölüm sayısı) yok olmaz.
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void Bootstrap()
     {
@@ -51,7 +61,7 @@ public class LiveDieRepeat : MonoBehaviour
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
-        Deaths = PlayerPrefs.GetInt(DeathKey, 0);
+        Deaths = PlayerPrefs.GetInt(DeathKey, 0);   // kayıtlı ölüm sayısını oku (ilk açılışta 0)
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -66,6 +76,7 @@ public class LiveDieRepeat : MonoBehaviour
         return n.Contains(GameSceneKeyword) || n == "LdrOyun";
     }
 
+    // Her yeni sahnede (yeniden doğuşta) ölüm durumunu sıfırlar, oyun hızını normale döndürür.
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         player = null;
@@ -85,6 +96,8 @@ public class LiveDieRepeat : MonoBehaviour
         if (Instance != null) Instance.RegisterDeath();
     }
 
+    // Her kare: ölüm ekranındaysak süreyi say ve bitince yeniden başlat.
+    // Değilsek oyuncuyu takip et; oyuncu 0,75 sn ortadan kaybolursa (yedek yol) ölüm say.
     void Update()
     {
         if (!IsGameScene()) return;
@@ -139,6 +152,8 @@ public class LiveDieRepeat : MonoBehaviour
         return null;
     }
 
+    // ÖLÜMÜ KAYDET: sayacı 1 artırır, diğer sistemlere haber verir, PlayerPrefs'e yazar.
+    // "dying" bayrağı aynı ölümün iki kez sayılmasını engeller.
     void RegisterDeath()
     {
         if (dying) return;
@@ -146,10 +161,11 @@ public class LiveDieRepeat : MonoBehaviour
         dyingTimer = 0f;
         Deaths++;
         try { if (OnDeath != null) OnDeath(); } catch (System.Exception e) { Debug.LogWarning(e.Message); }
-        PlayerPrefs.SetInt(DeathKey, Deaths);
+        PlayerPrefs.SetInt(DeathKey, Deaths);       // kalıcı kayıt: oyun kapansa da ölüm sayısı kalır
         PlayerPrefs.Save();
     }
 
+    // YENİDEN DOĞ: aynı sahneyi baştan yükler; zindan yeni bir düzenle tekrar kurulur.
     void Restart()
     {
         dying = false;
@@ -185,6 +201,7 @@ public class LiveDieRepeat : MonoBehaviour
             LdrUI.Text(hr, "ÖLÜM  " + Deaths, hudStyle, new Color(1f, 0.28f, 0.34f), 1f);
         }
 
+        // Ölüm ekranı: kırmızı karartma, titreyen "ÖLDÜN" yazısı ve kaçıncı ölüm olduğu.
         if (dying && rep)
         {
             float t = dyingTimer;
