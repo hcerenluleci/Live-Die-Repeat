@@ -292,17 +292,22 @@ public class LdrKat : MonoBehaviour
 
     // ---------------------------------------------------------------- sandıklar ve kaçış parçası
 
-    int sandikGorulen, temizOda;
-    bool parcaAtandi;
+    // [Mekanik 3] Bu bölümdeki sandık/parça durumu:
+    int sandikGorulen, temizOda;   // şimdiye kadar çıkan sandık sayısı, temizlenen oda sayısı
+    bool parcaAtandi;              // bu bölümün parçası bir sandığa (ya da odaya) zaten verildi mi
 
     /// <summary>Mühürlü sandık: bu derinliğin parçası alınmadıysa, görülen 1., 2., 3. sandık %40 / %70 / %100 şansla mühürlü olur.</summary>
+    // [Mekanik 3] Yeni çıkan sandık mühürlü olsun mu?
+    //  - Bölüm 5'te, parçası zaten alınmış bölümde ya da parça zaten atandıysa: hayır.
+    //  - Yoksa 1. sandık %40, 2. sandık %70, 3. sandık %100 şansla mühürlü olur.
+    //  Neden artan şans? Parça hemen ilk sandıkta çıkmasın (keşif ödüllendirilsin) ama en geç 3. sandıkta mutlaka çıksın.
     bool MuhurluAta()
     {
         sandikGorulen++;
         if (derinlik >= LdrParca.Gerekli || LdrParca.Var(derinlik) || parcaAtandi) return false;
         float sans = sandikGorulen == 1 ? 0.4f : (sandikGorulen == 2 ? 0.7f : 1f);
-        if (Random.value >= sans) return false;
-        parcaAtandi = true;
+        if (Random.value >= sans) return false;   // zar tutmadı: normal sandık
+        parcaAtandi = true;                       // bu bölümde başka mühürlü sandık çıkmasın
         return true;
     }
 
@@ -335,6 +340,8 @@ public class LdrKat : MonoBehaviour
             }
         }
         // sandık çıkmadıysa: parça henüz atanmadıysa temizlenen odalarda artan şansla ruh kristali
+        // [Mekanik 3] Yedek yol: bu bölümde mühürlü sandık hiç çıkmazsa parça doğrudan odada belirir.
+        // Şans her temizlenen odada artar (%30 + %20 x oda), böylece hiçbir bölüm parçasız kalmaz.
         if (!boss && derinlik < LdrParca.Gerekli && !LdrParca.Var(derinlik) && !parcaAtandi && Random.value <= 0.3f + 0.2f * temizOda)
         {
             parcaAtandi = true;

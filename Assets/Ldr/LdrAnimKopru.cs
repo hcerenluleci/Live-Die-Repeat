@@ -1,5 +1,13 @@
 using UnityEngine;
 
+// =====================================================================================
+// DERS GEREKSİNİMİ: ANIMATOR (2 Animator, her birinde en az 3 durum)
+// Animator 1: OyuncuAnim  -> Durus, Yuru, Takla, Olu (4 durum)
+// Animator 2: DusmanAnim  -> Uyuyor, Uyari, Kovala, Saldir, Sendeler, Oldu (6 durum, düşmanın FSM'i ile birebir)
+// Çizimler kodla üretildiği için animasyon klipleri sprite yerine bu bileşenin alanlarını (kare, ölçek, eğim) oynatır;
+// oyuncu/düşman kodu her karede bu değerleri gövdeye uygular. Hangi animasyonun oynadığına Animator karar verir.
+// Animator dosyaları: Assets/Resources/Animasyon (Unity menüsü: Ldr > Animator'ları Kur).
+// =====================================================================================
 /// <summary>
 /// Animator köprüsü. Oyuncu ve düşman çizimleri kodla üretildiği için animasyon klipleri doğrudan sprite'a değil,
 /// bu bileşenin alanlarına yazar: kare (0 / 1: hangi çizim karesi), olcekX / olcekY (gövde ölçeği), egim (gövde açısı, derece).

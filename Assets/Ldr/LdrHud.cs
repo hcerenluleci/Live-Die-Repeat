@@ -1,6 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// =====================================================================================
+// DERS GEREKSİNİMİ: HUD (Heads-Up Display) - oyun boyunca hep görünür
+// Gösterir: can (5 kan damlası), RUH + ZİNCİR plakası, silah ve mermi plakası, [T] ışınlanma ve [F] ateş topu
+// plakaları, güç süreleri, ekrana süzülen duyurular ("ODA TEMİZLENDİ" gibi) ve bölüm başlığı.
+// Ruh ve zincir değişince LdrPuan.Degisti olayıyla haber alır, plakayı kısa bir nabızla günceller.
+// =====================================================================================
 /// <summary>
 /// Ekran göstergeleri: sol üstte RUH + ZİNCİR plakası, altta ortada silah plakası ve
 /// üstünde 5 kan damlası (can), sol altta [T] / [F] plakaları, güç çubukları, yukarı süzülen bildirimler, bölüm başlığı,
@@ -22,12 +28,14 @@ public class LdrHud : MonoBehaviour
     static string baslik;
     static float baslikZaman = 99f;
 
+    // Ekranın ortasında yukarı süzülen renkli bir bildirim gösterir (örn. "KAÇIŞ PARÇASI BULUNDU!").
     public static void Duyur(string yazi, Color renk)
     {
         if (bildirimler.Count >= 4) bildirimler.RemoveAt(0);
         bildirimler.Add(new Bildirim { yazi = yazi, renk = renk });
     }
 
+    // Yeni bölüme girince büyük bölüm başlığını gösterir.
     public static void Baslik(string b) { baslik = b; baslikZaman = 0f; }
 
     public static void Sifirla()

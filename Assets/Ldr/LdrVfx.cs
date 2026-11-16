@@ -1,5 +1,11 @@
 using UnityEngine;
 
+// =====================================================================================
+// DERS GEREKSİNİMİ: GÖRSEL EFEKTLER (en az 2, Particle System)
+// Burst(): tek seferlik parçacık patlaması -> düşman ölümü (kan + ruh), mermi kıvılcımı, ışınlanma, sandık belirmesi, parça bulunması.
+// Motes(): sürekli süzülen kıvılcımlar -> mühürlü sandığın ve kaçış parçasının etrafındaki mor ışıltı.
+// Particle System kodla kurulur (renk, hız, boyut, ömür, yerçekimi); ayrıca efekt dosyası gerekmez.
+// =====================================================================================
 /// <summary>
 /// ÖZGÜN PARTICLE SYSTEM EFEKTLERİ (kodla üretilir, ek dosya gerekmez).
 ///  - Burst: tek seferlik patlama (düşman ölümü, vuruş kıvılcımı, kaçış parçası bulunması)
@@ -25,6 +31,7 @@ public static class LdrVfx
         r.sortingLayerID = layerId; r.sortingOrder = order;
     }
 
+    // Verilen noktada tek seferlik parçacık patlaması oluşturur; bitince kendini siler.
     /// <summary>Tek seferlik patlama. gravity &gt; 0 aşağı çeker, &lt; 0 yukarı süzülür.</summary>
     public static void Burst(Vector3 pos, Color c1, Color c2, int count, float speed, float size, float life, float gravity, int layerId, int order)
     {
@@ -55,6 +62,7 @@ public static class LdrVfx
         Object.Destroy(go, life + 1.5f);
     }
 
+    // Bir nesnenin etrafında sürekli yukarı süzülen ışıltı parçacıkları oluşturur.
     /// <summary>Sürekli süzülen kıvılcımlar; parent ile birlikte yok olur.</summary>
     public static ParticleSystem Motes(Transform parent, Color c, float rate, float radius, float rise, int layerId, int order)
     {

@@ -59,7 +59,7 @@ Karanlık bir zindanda geçen, piksel sanat bir **korku nişancısı** (top-down
 - `Assets/Ldr/LdrAnimKopru.cs` ve `Assets/Resources/Animasyon/`: Animator köprüsü, denetleyiciler ve klipler.
 - `Assets/Resources/`: seslerimiz, yazı tipimiz ve animasyonlar.
 - `Araclar/zindan.py`: zindan tasarım aracımız. Odaları (biçim, duvar, kapı, sütun, eşya, doğma noktaları) ve kat grafiklerini üretir, her odanın kapılarına ulaşılabildiğini ve her grafiğin oyundaki yerleştirme kurallarıyla kurulabildiğini sınar. Çalıştırma: `python Araclar/zindan.py Assets/Ldr/LdrSablonVerisi.cs --onizle`
-- `Assets/Ldr/Editor/`: editör araçları. **Ldr > Animator'ları Kur** animasyon denetleyicilerini, **Ldr > LdrOyun sahnesini kur ve aç** sahneyi yeniden üretir.
+- `Assets/Ldr/Editor/`: editör araçları. **Ldr > Animator'ları Kur** animasyon denetleyicilerini, **Ldr > LdrOyun sahnesini kur ve aç** sahneyi yeniden üretir, **Ldr > Derle** menüsü itch.io için Windows ve WebGL paketlerini `Builds/` klasörüne hazırlar.
 - `Assets/Editor/`: geliştirme sırasında kullanılan geçici bakım araçları (teslim öncesi silinecek).
 
 ## Çalıştırma
@@ -72,3 +72,7 @@ Unity Hub ile projeyi **6000.3.24f1** sürümüyle aç, `Assets/_Scenes/LdrOyun`
 
 - Oyunun kodu, piksel çizimleri, sesleri, müzikleri, yazı tipi, oda tasarımları ve denge değerleri Grup 11 tarafından bu proje için üretilmiştir.
 - Unity paketleri (URP, 2D Sprite/Tilemap, uGUI ve TextMesh Pro kaynakları; TextMesh Pro'nun varsayılan LiberationSans yazı tipi OFL lisanslıdır) Unity Package Manager üzerinden kendi lisanslarıyla kullanılır.
+
+## Lisans
+
+Telif Hakkı © 2026 Hülya Ceren Lüleci. Tüm hakları saklıdır. Kaynak kod ve içerik açık kaynak değildir; ayrıntılar için `LICENSE` dosyasına bakın.

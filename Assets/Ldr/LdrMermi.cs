@@ -94,9 +94,9 @@ public class LdrMermi : MonoBehaviour
             {
                 if (can.takim == takim || can.Olu) continue;         // kendi takımı ve ölüler mermiyi durdurmaz
                 can.Hasar(hasar, p);
-                if (takim == 0) LdrPuan.ZincirDegistir(true);
+                if (takim == 0) LdrPuan.ZincirDegistir(true);   // [Mekanik 2] oyuncunun mermisi düşmana isabet etti: zincir +1
             }
-            else if (takim == 0) LdrPuan.ZincirDegistir(false);       // oyuncu mermisi duvara/eşyaya çarptı
+            else if (takim == 0) LdrPuan.ZincirDegistir(false);       // [Mekanik 2] oyuncu mermisi duvara/eşyaya çarptı: ıska, zincir -2
             Kivilcim(vurus[i].point);
             Bitir();
             return;
@@ -106,7 +106,7 @@ public class LdrMermi : MonoBehaviour
         if (iz) IzBirak();
         if (kalanMenzil <= 0.001f)
         {
-            if (takim == 0) LdrPuan.ZincirDegistir(false);            // menzil dışı: boşa gitti
+            if (takim == 0) LdrPuan.ZincirDegistir(false);            // [Mekanik 2] menzil dışı: boşa gitti, ıska, zincir -2
             Bitir();
         }
     }

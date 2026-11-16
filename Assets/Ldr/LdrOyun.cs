@@ -149,10 +149,12 @@ public class LdrOyun : MonoBehaviour
         LdrHud.KarartmaRenk = Color.black;
     }
 
+    // [Mekanik 3] Son bölümün çıkışına girilince: 4 kaçış parçası tamamsa "KAÇTIN" (oyun kazanıldı),
+    // eksikse "ÇIKIŞ MÜHÜRLÜ" yazar ve oyuncu 1. bölüme geri döner (döngü devam eder).
     IEnumerator SonYap()
     {
         YasamiKaydet();
-        bool kactin = LdrParca.Sayi() >= LdrParca.Gerekli;
+        bool kactin = LdrParca.Sayi() >= LdrParca.Gerekli;   // kazanma koşulu: 4 parçanın hepsi
         if (kactin)
         {
             PlayerPrefs.SetInt("LDR_Escapes", PlayerPrefs.GetInt("LDR_Escapes", 0) + 1);
@@ -187,16 +189,19 @@ public class LdrOyun : MonoBehaviour
     }
 
     /// <summary>Bu yaşamın ruhunu kalıcı toplama ekler ve puan tablosuna yazar.</summary>
+    // [Mekanik 1] Son bölüm bitince bu yaşamda kazanılan ruhu kalıcı toplama ekler ve puan tablosuna yazar.
     void YasamiKaydet()
     {
         LdrIlerleme.RuhEkle(LdrPuan.Ruh);
         LdrIlerleme.PuanEkle(LdrIlerleme.KarakterAdi(LdrIlerleme.Karakter), DerinlikAdi(Derinlik), LdrPuan.Ruh);
     }
 
+    // [Mekanik 1] Oyuncunun canı 0 olunca çağrılır: oyuncuyu dondurur, ölüm sesini çalar,
+    // derinliği başa (1. bölüm) alır ve ölümü LiveDieRepeat'e bildirir.
     void OyuncuOldu(LdrCan c)
     {
         yasayan.Donuk = true;
-        YasamiKaydet();
+        // ruh ve puan tablosu burada değil, ölüm bildirilince LdrMenu.OlumOldu'da kaydedilir (iki kez sayılmasın)
         LdrSes.Cal("sfx_player_death", 0.8f);
         Derinlik = 0;
         LiveDieRepeat.ReportDeath();

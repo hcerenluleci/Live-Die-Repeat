@@ -1,5 +1,10 @@
 using UnityEngine;
 
+// =====================================================================================
+// MEKANİK: DEVRİLEBİLİR MASA (siper)  -  Ali Çağrı Sepet
+// Dik dururken mermi içinden geçer. E ile oyuncunun tersine devrilir (5 karelik animasyon); devrilince mermiyi durdurur
+// ve itilerek taşınabilir ama odanın dışına çıkamaz.
+// =====================================================================================
 /// <summary>
 /// İtilebilir tahta masa (siper).
 ///  - Yatay masa 2,90 x 1,00, dikey masa 1,00 x 2,10 çarpışma kutusu; önce yerinden oynamaz (çok ağır), mermi içinden geçer.
@@ -62,6 +67,7 @@ public class LdrMasa : MonoBehaviour, ILdrEtkilesim
     void OnEnable() { LdrEtkilesim.Kaydet(this); LdrSira.Kaydet(kutu); }
     void OnDisable() { LdrEtkilesim.Sil(this); LdrSira.Sil(kutu); }
 
+    // E'ye basınca masayı oyuncudan uzağa doğru devirir.
     public void Etkilesim(LdrYasayan oyuncu)
     {
         if (Devrildi) return;

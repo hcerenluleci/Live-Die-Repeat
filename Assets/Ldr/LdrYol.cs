@@ -1,6 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// =====================================================================================
+// A* YOL BULMA  -  Ali Çağrı Sepet
+// Izgara: 1x1 hücreler. g = başlangıçtan gelinen yol, h = hedefe kuş uçuşu (sezgisel), en küçük f = g + h açılır.
+// Düşman sadece düz yol kapalıyken kullanır (performans için); bulunan yol düşmana ara noktalar olarak verilir.
+// =====================================================================================
 /// <summary>
 /// Yol bulma (A*). Düşman, oyuncuya giden doğrudan yol masa, heykel ya da
 /// duvar tarafından kapalıysa 1x1'lik ızgarada A* ile dolanarak giden bir yol bulur. Izgara hücreleri aranırken tembelce
@@ -44,6 +49,7 @@ public static class LdrYol
         return b;
     }
 
+    // A* araması: başlangıçtan hedefe engellere çarpmayan en kısa yolu "yol" listesine doldurur; bulursa true, bulamazsa false döner.
     /// <summary>Başlangıçtan hedefe hücre merkezlerinden geçen bir yol (başlangıç hariç) doldurur. Yol yoksa false.</summary>
     public static bool Bul(LdrOda oda, Vector2 bas, Vector2 hedef, float yaricap, List<Vector2> yol)
     {
@@ -99,6 +105,7 @@ public static class LdrYol
         return yol.Count > 0;
     }
 
+    // A*'ın sezgisel (heuristic) değeri: hedefe kalan kuş uçuşu uzaklık.
     static float Sezgi(int x, int y, int hx, int hy)
     {
         float a = Mathf.Abs(x - hx), b = Mathf.Abs(y - hy);

@@ -1,6 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// =====================================================================================
+// ODA: zemin/duvar çizimi, kapılar ve kilit. Savaş odasına girilince kapılar kilitlenir;
+// odadaki tüm düşmanlar ölünce açılır ("ODA TEMİZLENDİ").
+// =====================================================================================
 /// <summary>
 /// Odanın bir kapısı: başta KAPALI görünür ama içinden geçilebilir; oyuncu yaklaşınca açılır ve açık kalır.
 /// Oda kilitlenince (savaş) kapanır ve katı engel olur; kilit çözülünce, daha önce açılmışsa tekrar açılır.

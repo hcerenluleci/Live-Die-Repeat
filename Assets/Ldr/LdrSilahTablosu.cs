@@ -1,6 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// =====================================================================================
+// SİLAH TABLOSU: 9 oyuncu silahı ve açılma şartları (ölüm sayısı ya da toplam ruh), ayrıca düşman/boss silahları.
+// Örn: Soluk Tabanca başta açık, Sürgün Revolveri 1 ölüm, Tırnak 400 ruh, Ruh Topu 4000 ruh.
+// =====================================================================================
 /// <summary>
 /// Mermi tanımı: hasar, hız, menzil, sapma, bir atıştaki mermi sayısı ve iz.
 /// Inspector'da bu alanlar düzenli başlıklarla görünür.

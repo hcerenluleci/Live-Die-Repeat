@@ -1,6 +1,10 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
+// =====================================================================================
+// ÇIKIŞ: boss odası temizlenince belirir; E ile bir alt bölüme inilir.
+// Son bölümde 4 kaçış parçası tamamsa oyun kazanılır ("KAÇTIN"), değilse çıkış mühürlü kalır.
+// =====================================================================================
 /// <summary>
 /// Çıkış geçidi. Çıkış odasındaki düşmanlar bitince belirir; E ile bir alt derinliğe inilir.
 /// Son derinlikte (SON UYANIŞ) dört kaçış parçası toplanmışsa oyun biter, yoksa çıkış mühürlü kalır.

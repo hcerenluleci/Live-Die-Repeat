@@ -1,6 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// =====================================================================================
+// HARİTA: sağ üstte yuvarlak mini harita; M ile tam kat haritası açılır/kapanır.
+// Renkler: bulunduğun oda mor, temiz oda camgöbeği, boss odası kırmızı, görülmemiş oda koyu.
+// =====================================================================================
 /// <summary>
 /// Mini harita (M tuşu): sağ üstte yuvarlak "ritüel gözü". Oyuncunun çevresini gösterir; odalar kendi minimap karolarıyla (düzensiz kenarlı) çizilir;
 /// bulunduğun oda mor, boss odası kırmızı (atıp tutan), temizlenen oda camgöbeği, görülmüş oda soluk mor, görülmemiş oda koyu kırmızıdır.

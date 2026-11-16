@@ -3,6 +3,11 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
+// =====================================================================================
+// KORKU EFEKTLERİ ve POST-PROCESSING
+// URP Volume: vinyet, film greni, kromatik sapma, bloom, soluk renk; can azalınca kırmızı nabız atan vinyet.
+// Vurulunca 4 sn halüsinasyon, rastgele ve ölüm sonrası jump scare (yüz + çığlık), namlu ve takla efektleri.
+// =====================================================================================
 /// <summary>
 /// Görüntü ve efekt katmanı:
 ///  - Korku görüntüsü: vinyet, film greni, kromatik sapma, soluk renk, bloom (URP Volume)
@@ -374,6 +379,7 @@ public class LdrEfekt : MonoBehaviour
             if (sr.gameObject.name == "Govde") govde = sr;
     }
 
+    // Oyuncu vurulunca: ekran sarsıntısı, kırmızı flaş ve halüsinasyonu başlatır.
     void Vuruldu(LdrCan can, Vector2 kaynak)
     {
         hasar = 1f; kromatikVurus = 1f;
@@ -424,6 +430,7 @@ public class LdrEfekt : MonoBehaviour
     }
 
     // ---------------------------------------------------------------- jump scare
+    // Jump scare: ekrana bir anlığına korkunç bir yüz çizer ve çığlık sesini çalar.
     void ScareBaslat()
     {
         if (cigligi == null) cigligi = CigligiUret();

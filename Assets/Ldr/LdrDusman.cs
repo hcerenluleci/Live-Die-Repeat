@@ -4,6 +4,14 @@ using UnityEngine.Rendering.Universal;
 
 public enum LdrDusmanDurumu { Uyuyor, Uyari, Kovala, Saldir, Sendeler, Oldu }
 
+// =====================================================================================
+// DERS GEREKSİNİMİ: OYUN YAPAY ZEKASI (Finite State Machine)  -  Ali Çağrı Sepet
+// Durumlar: Uyuyor -> Uyari (0,55 sn irkilme) -> Kovala <-> Saldir ; vurulunca Sendeler (0,16 sn) ; can bitince Oldu.
+// Uyanma: oyuncu 40 birim içine gelince. Ateş edenler sadece oyuncuyu görürken (görüş çizgisi) ateş eder.
+// Yol: oyuncuya giden yol masa/duvarla kapalıysa A* (LdrYol) ile etrafından dolaşır.
+// Her durum Animator'daki (DusmanAnim) aynı adlı animasyonu oynatır: anim.Int("Durum", ...).
+// 5 tür: Sızıntı, Kızıl Sızıntı, Ağıtçı, Bakıcı (dönen 8'li mermi halkası), Sürünen (atılır ve ateş eder). Can = taban x (1 + 0,18 x derinlik).
+// =====================================================================================
 /// <summary>
 /// Düşman. Beş tür, takımın kendi yaratık çizimleri (LdrYaratikSayfa): Sızıntı, Kızıl Sızıntı, Ağıtçı, Bakıcı, Sürünen.
 /// Sonlu durum makinesi: Uyuyor -> Uyarı (0,55 sn irkilme) -> Kovala <-> Saldır; vurulunca kısa Sendele; can bitince ölüm patlaması.
@@ -255,6 +263,7 @@ public class LdrDusman : MonoBehaviour
     void OnEnable() { Hepsi.Add(this); }
     void OnDisable() { Hepsi.Remove(this); }
 
+    // FSM: yeni duruma geçer ve o durumun zamanlayıcısını sıfırlar.
     void Gir(LdrDusmanDurumu d)
     {
         if (Durum == d || Durum == LdrDusmanDurumu.Oldu) return;
@@ -273,6 +282,7 @@ public class LdrDusman : MonoBehaviour
         }
     }
 
+    // FSM'in kalbi: her karede o anki duruma göre ne yapılacağına karar verir ve Animator'a durumu yazar.
     void Update()
     {
         if (Can.Olu) return;
@@ -441,6 +451,7 @@ public class LdrDusman : MonoBehaviour
         itme = Vector2.MoveTowards(itme, Vector2.zero, 30f * Time.fixedDeltaTime);
     }
 
+    // Oyuncuya düz giden yol bir engelle kapalı mı? Kapalıysa A* yol bulmaya geçilir.
     bool YolKapali(Vector2 a, float r, float mesafe)
     {
         var cf = new ContactFilter2D();
@@ -597,6 +608,7 @@ public class LdrDusman : MonoBehaviour
         }
     }
 
+    // Oyuncuyu görüyor mu? Arada duvar/masa var mı diye ışın (Raycast) atar.
     bool Gorus(Vector2 fark, float mesafe)
     {
         if (duvarMaskesi == 0) return true;
@@ -643,6 +655,7 @@ public class LdrDusman : MonoBehaviour
 
     // ---------------------------------------------------------------- hasar ve ölüm
 
+    // Hasar alınca: kısa sendeleme durumuna geçer; uyuyorsa uyanır.
     void Vuruldu(LdrCan c, Vector2 kaynak)
     {
         kirmizi = 0.1f;
@@ -656,6 +669,7 @@ public class LdrDusman : MonoBehaviour
         if (!boss) Gir(LdrDusmanDurumu.Sendeler);
     }
 
+    // Can bitince: ölüm animasyonu, ruh kazancı (LdrPuan.Kazan = can x zincir), ölüm patlaması ve ses.
     void Oldu(LdrCan c)
     {
         Durum = LdrDusmanDurumu.Oldu;

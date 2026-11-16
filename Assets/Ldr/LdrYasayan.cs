@@ -1,5 +1,11 @@
 using UnityEngine;
 
+// =====================================================================================
+// OYUNCU (Liz / Jan): hareket, nişan, takla. Takla mekaniği  -  Ali Çağrı Sepet
+// WASD 5,5 birim/sn hareket; fareye doğru bakar. SPACE: 0,36 sn takla, 2,4 kat hız, dokunulmazlık, 0,7 sn bekleme.
+// Animator (OyuncuAnim) Durus / Yuru / Takla / Olu durumlarını oynatır: anim.Bool("Hareket"/"Takla"/"Olu", ...).
+// Can: Liz 100, Jan 70 (vurulunca Liz 2,5 sn, Jan 3,5 sn koruma süresi).
+// =====================================================================================
 /// <summary>
 /// Oyuncu ("Yaşayan"). Liz veya Jan olarak seçilir (LdrKostum çizimleri).
 /// WASD hareket, SPACE ile takla (kısa dokunulmazlık), fareye doğru bakış ve silah çizimi.

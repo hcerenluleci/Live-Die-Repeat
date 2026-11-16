@@ -5,17 +5,25 @@ using UnityEngine.Rendering.Universal;
 /// Kaçış parçaları. Dört derinliğin her birinde mühürlü bir sandık bir parça saklar.
 /// Parçalar ölümde kaybolmaz (PlayerPrefs "LDR_ShardMask": her derinlik için bir bit); dördü toplanınca son çıkış açılır.
 /// </summary>
+// =====================================================================================
+// MEKANİK 3: MÜHÜRLÜ SANDIK VE KAÇIŞ PARÇALARI  (Hülya Ceren Lüleci)  -  parçaların kaydı
+// 4 parça (bölüm 1-4'te birer tane). Ölünce KAYBOLMAZ. 4'ü toplanınca son bölümdeki mühürlü çıkış açılır.
+// Kayıt tek bir sayı (bit maskesi): her bölüm bir bit. Örn. 1. ve 3. parça alındıysa maske = 0101 (ikilik) = 5.
+// Neden bit maskesi? Tek bir PlayerPrefs değeriyle hangi bölümün parçasının alındığını tutabiliyoruz.
+// =====================================================================================
 public static class LdrParca
 {
-    public const int Gerekli = 4;
-    public const string Anahtar = "LDR_ShardMask";
+    public const int Gerekli = 4;                     // çıkış için gereken parça sayısı
+    public const string Anahtar = "LDR_ShardMask";    // PlayerPrefs anahtarı (kalıcı kayıt)
 
     static Texture2D doku;
     static Sprite sprite;
 
-    public static int Maske { get { return PlayerPrefs.GetInt(Anahtar, 0); } }
+    public static int Maske { get { return PlayerPrefs.GetInt(Anahtar, 0); } }   // kayıtlı bit maskesi
+    // Bu bölümün parçası alınmış mı? (1 << derinlik) o bölümün bitini seçer, & ile kontrol edilir.
     public static bool Var(int derinlik) { return derinlik >= 0 && derinlik < Gerekli && (Maske & (1 << derinlik)) != 0; }
 
+    // Toplam kaç parça alındığını sayar (maskedeki 1 olan bitler).
     public static int Sayi()
     {
         int m = Maske, n = 0;
@@ -23,6 +31,7 @@ public static class LdrParca
         return n;
     }
 
+    // Parça alındı: bu bölümün bitini | (VEYA) ile 1 yapıp kaydeder. Önceki parçalar korunur.
     public static void Ekle(int derinlik)
     {
         if (derinlik < 0 || derinlik >= Gerekli) return;
@@ -37,6 +46,7 @@ public static class LdrParca
     }
 
     /// <summary>16x16 elmas biçimli kristal, kodla çizilir.</summary>
+    // Parçanın görseli: 16x16 mor elmas, kodla piksel piksel çizilir (dışarıdan resim dosyası yok).
     public static Texture2D Doku()
     {
         if (doku != null) return doku;
@@ -77,6 +87,7 @@ public static class LdrParca
 }
 
 /// <summary>Sandıktan çıkan, yüzen ve yaklaşınca toplanan parça.</summary>
+// Sahnede görünen parça: yukarı aşağı süzülür, ışığı nabız gibi atar; oyuncu 1,15 birim yaklaşınca toplanır.
 public class LdrParcaNesnesi : MonoBehaviour
 {
     int derinlik;
@@ -123,6 +134,8 @@ public class LdrParcaNesnesi : MonoBehaviour
         if (Vector2.Distance(o.yasayan.transform.position, transform.position) < 1.15f) Al();
     }
 
+    // TOPLA: kalıcı kayda ekle, patlama efekti ve ekran flaşı, "KAÇIŞ PARÇASI BULUNDU! n/4" duyurusu.
+    // 4'ü tamamsa "ÇIKIŞ ANAHTARI TAMAM" yazar; sonra parça nesnesi silinir.
     void Al()
     {
         alindi = true;

@@ -3,15 +3,30 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 #endif
 
+// =====================================================================================
+// GİRDİ: oyunun geri kalanı klavye/fareyi doğrudan okumaz, buradan alır (WASD, SPACE, R, E, F, T, M, B, ESC, fare).
+// Böylece tuş değişikliği ya da yeni girdi sistemi tek dosyayı etkiler.
+// =====================================================================================
 /// <summary>
 /// Girdi katmanı. Oyunun geri kalanı klavye/fareyi doğrudan okumaz, buradan alır;
 /// böylece eski ve yeni girdi sistemi arasında geçmek tek dosyayı ilgilendirir.
 /// </summary>
 public static class LdrGiris
 {
+#if UNITY_EDITOR
+    // Yalnızca editörde: fragman kayıt aracı (LdrFragman) oyunu kendi oynatırken girdiyi buradan verir.
+    // Normal oyunda hepsi null kalır ve hiçbir etkisi olmaz.
+    public static System.Func<Vector2> PilotYon;
+    public static System.Func<bool> PilotAtes, PilotTakla, PilotEtkilesim;
+    public static System.Func<Vector2?> PilotHedef;   // nişan alınan dünya noktası
+#endif
+
     /// <summary>WASD / ok tuşları. Uzunluğu en fazla 1.</summary>
     public static Vector2 Yon()
     {
+#if UNITY_EDITOR
+        if (PilotYon != null) return PilotYon();
+#endif
         Vector2 v;
 #if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
         var k = Keyboard.current;
@@ -26,6 +41,9 @@ public static class LdrGiris
 
     public static bool TaklaBasildi()
     {
+#if UNITY_EDITOR
+        if (PilotTakla != null) return PilotTakla();
+#endif
 #if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
         return Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame;
 #else
@@ -44,6 +62,9 @@ public static class LdrGiris
 
     public static bool EtkilesimBasildi()
     {
+#if UNITY_EDITOR
+        if (PilotEtkilesim != null) return PilotEtkilesim();
+#endif
 #if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
         return Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame;
 #else
@@ -121,6 +142,9 @@ public static class LdrGiris
 
     public static bool AtesBasili()
     {
+#if UNITY_EDITOR
+        if (PilotAtes != null) return PilotAtes();
+#endif
 #if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
         return (Mouse.current != null && Mouse.current.leftButton.isPressed) || (Keyboard.current != null && Keyboard.current.gKey.isPressed);
 #else
@@ -134,6 +158,14 @@ public static class LdrGiris
 
     public static Vector2 FareEkran()
     {
+#if UNITY_EDITOR
+        if (PilotHedef != null)
+        {
+            var h = PilotHedef();
+            var k = Camera.main;
+            if (h.HasValue && k != null) { Vector3 e = k.WorldToScreenPoint(new Vector3(h.Value.x, h.Value.y, 0f)); return new Vector2(e.x, e.y); }
+        }
+#endif
 #if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
         return Mouse.current != null ? Mouse.current.position.ReadValue() : Vector2.zero;
 #else

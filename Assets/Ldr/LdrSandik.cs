@@ -6,6 +6,12 @@ using UnityEngine.Rendering.Universal;
 /// Mühürlü olan (mor ışık, süzülen kıvılcımlar) kaçış parçası saklar; diğerleri 1-3 yardım eşyası verir:
 /// silah kasası, cephane, can üzümü. E ile açılır. Çizim: LdrResim "sandik_sayfa" (4 kare, kapalıdan açığa).
 /// </summary>
+// =====================================================================================
+// MEKANİK 3: MÜHÜRLÜ SANDIK VE KAÇIŞ PARÇALARI  (Hülya Ceren Lüleci)  -  sandığın kendisi
+// Normal sandık: açılınca 1-3 yardım eşyası verir.  Mühürlü sandık: mor ışık + kıvılcım, içinden kaçış parçası çıkar.
+// Hangi sandığın mühürlü olacağına LdrKat.MuhurluAta() karar verir; parçanın kaydı LdrParca'da.
+// ILdrEtkilesim: oyuncu yanına gelince "[E] SANDIĞI AÇ" yazısı çıkar, E'ye basınca Etkilesim() çağrılır.
+// =====================================================================================
 public class LdrSandik : MonoBehaviour, ILdrEtkilesim
 {
     // sandık: 4 kare (kapalı ... açık), 2 x 2 birim; sıcak renk tonu; çarpışma kutusu 1,90 x 1,50
@@ -28,6 +34,7 @@ public class LdrSandik : MonoBehaviour, ILdrEtkilesim
     /// <param name="muhurlu">kaçış parçası saklar</param>
     /// <param name="madde">mühürlü değilse kaç yardım eşyası verir (0-3)</param>
     /// <param name="belir">sandık birkaç saniyede parlayan noktalardan oluşarak belirir (LdrBelirme)</param>
+    // Sandığı oluşturur: çarpışma kutusu, görsel, ışık. Mühürlüyse ışık mor ve daha büyük, etrafında kıvılcım parçacıkları.
     public static LdrSandik Kur(Transform ebeveyn, Vector2 dunya, int derinlik, bool muhurlu, int madde, bool belir = false)
     {
         var go = new GameObject("Sandik");
@@ -61,6 +68,7 @@ public class LdrSandik : MonoBehaviour, ILdrEtkilesim
             s.beliriyor = true;
             LdrBelirme.Baslat(s.sr, new Color(0.8f, 0.45f, 1f), 2.5f, () => { if (s != null) s.beliriyor = false; });
         }
+        // mühürlüyse etrafında süzülen mor kıvılcımlar (Particle System) oyuncuya "bu özel" der
         if (s.muhurlu) s.kivilcim = LdrVfx.Motes(go.transform, new Color(0.85f, 0.55f, 1f), 9f, 0.55f, 0.4f, 0, 14);
         return s;
     }
@@ -81,6 +89,8 @@ public class LdrSandik : MonoBehaviour, ILdrEtkilesim
         isik.intensity = (muhurlu ? 1.3f : 0.7f) * (0.85f + 0.15f * Mathf.Sin(Time.time * 4f));
     }
 
+    // E'ye basınca: sandık bir kez açılır (acik bayrağı), açılma animasyonu ve ses başlar.
+    // Mühürlüyse kaçış parçası çıkar; değilse yardım eşyaları dökülür.
     public void Etkilesim(LdrYasayan oyuncu)
     {
         if (acik) return;
@@ -91,7 +101,7 @@ public class LdrSandik : MonoBehaviour, ILdrEtkilesim
         if (muhurlu)
         {
             LdrVfx.Burst(ust, new Color(0.85f, 0.55f, 1f), Color.white, 26, 4f, 0.18f, 0.8f, 0f, 0, 40);
-            LdrParcaNesnesi.Olustur((Vector2)transform.position + new Vector2(0f, 1.2f), derinlik, transform.parent);
+            LdrParcaNesnesi.Olustur((Vector2)transform.position + new Vector2(0f, 1.2f), derinlik, transform.parent);   // sandığın üstünde yüzen kaçış parçası belirir
             if (kivilcim != null) kivilcim.Stop();
         }
         else

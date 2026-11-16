@@ -1,5 +1,8 @@
 using UnityEngine;
 
+// =====================================================================================
+// KAMERA: top-down, oyuncuyu takip eder ve fareye doğru hafifçe kayar; vuruşta sarsılır.
+// =====================================================================================
 /// <summary>Kamera: oyuncuyu yumuşakça izler, fareye doğru hafifçe kayar, oda dışına taşmaz, vuruşlarda sarsılır.</summary>
 [RequireComponent(typeof(Camera))]
 public class LdrKamera : MonoBehaviour

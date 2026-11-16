@@ -1,6 +1,10 @@
 using System;
 using UnityEngine;
 
+// =====================================================================================
+// CAN: oyuncu ve düşmanda aynı bileşen. Hasar alınca koruma süresi başlar; can 0 olunca Oldu olayı tetiklenir.
+// HUD'da 5 kalp gösterilir: 1 kalp = canın %20'si.
+// =====================================================================================
 /// <summary>
 /// Can. Oyuncuda ve düşmanda aynı bileşen kullanılır. Değerler "can puanı"dır
 /// (Liz 100, Jan 70, düşmanlar 14-580); mermi hasarı doğrudan bu puandan düşer.

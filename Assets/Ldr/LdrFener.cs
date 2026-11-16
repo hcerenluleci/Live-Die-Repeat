@@ -1,6 +1,10 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
+// =====================================================================================
+// FENER: oyuncunun fareye dönük titrek ışığı. B ile 3 ışık seviyesi.
+// Menzili her ölümde büyür (LiveDieRepeat.MemoryLevel, en çok 10): "ne kadar ölürsen zindanı o kadar iyi hatırlarsın".
+// =====================================================================================
 /// <summary>
 /// Fener ve ortam ışığı. Sahneyi karartır; oyuncuya fare yönünü gösteren titrek bir fener, çevresinde bir hale
 /// ve süzülen renkli "lav lambası" ışıkları verir. B tuşu üç ışık seviyesi arasında gezer (seçim hatırlanır).

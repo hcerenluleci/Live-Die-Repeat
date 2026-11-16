@@ -1,5 +1,9 @@
 using UnityEngine;
 
+// =====================================================================================
+// DERS GEREKSİNİMİ: SES  -  müzik
+// İki döngü: music_horror_loop (menü ve keşif), music_battle_loop (oda kilitliyken savaş). Aralarında yumuşak geçiş yapılır.
+// =====================================================================================
 /// <summary>
 /// Müzik. İki döngü (Assets/Resources: music_horror_loop = menü ve sakin anlar, music_battle_loop = oda savaşı)
 /// birbirine yumuşakça geçer. Ses seviyesi duraklatma menüsündeki MÜZİK ayarından gelir (LdrSes.MuzikSeviyesi).

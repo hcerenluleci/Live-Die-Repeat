@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
+// =====================================================================================
+// YETENEK: T ile başlangıç odasına ışınlanma. 1,4 sn şarj, 30 sn bekleme; başlangıca 4 birimden yakınsan çalışmaz.
+// =====================================================================================
 /// <summary>
 /// T ile başlangıç noktasına ışınlanma (bizim özgün tasarım). 1,4 sn şarj olur, sonra katın başlangıç odasına gider;
 /// 30 sn bekleme süresi vardır. Zaten başlangıç noktasının 4 birim yakınındaysan işe yaramaz.

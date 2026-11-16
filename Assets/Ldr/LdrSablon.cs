@@ -1,6 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// =====================================================================================
+// PROSEDÜREL ZİNDAN: her oyunda zindan, hazır oda şablonlarından yeniden kurulur.
+// 23 oda şablonu (Araclar/zindan.py ile üretildi) ve 15 kat haritası (her derinlik grubu için 5). Rastgele bir kat
+// haritası seçilir, odalar kapıdan kapıya yerleştirilir; çakışan yerleşim denenip başka şablonla tekrar edilir.
+// =====================================================================================
 /// <summary>Şablondaki bir kapı yeri: yön, kenardaki konum ve kullanılmazsa duvarla doldurulacak boşluk (dahil sınırlar).</summary>
 public class LdrKapiVeri
 {
@@ -132,6 +137,7 @@ public static class LdrZindan
 {
     static readonly Vector2Int[] Ayar = { new Vector2Int(0, -1), new Vector2Int(-1, 0), new Vector2Int(0, 1), new Vector2Int(1, 0) };   // kuzey, doğu, güney, batı kapısına yaslanan oda kayması
 
+    // Verilen derinlik için rastgele bir kat haritası seçer ve odaları kapıları birbirine denk gelecek şekilde yerleştirir.
     public static List<LdrYerOda> Uret(int derinlik, System.Random rng)
     {
         string onEk = (Mathf.Clamp(derinlik, 0, 2) + 1) + "_";
@@ -242,6 +248,7 @@ public static class LdrZindan
         return true;
     }
 
+    // Yeni oda daha önce yerleştirilmiş bir odayla üst üste biniyor mu?
     static bool Cakisir(LdrYerOda a, LdrYerOda b)
     {
         return Mathf.Max(a.alt.x, b.alt.x) <= Mathf.Min(a.ust.x, b.ust.x) && Mathf.Max(a.alt.y, b.alt.y) <= Mathf.Min(a.ust.y, b.ust.y);

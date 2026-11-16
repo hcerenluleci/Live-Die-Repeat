@@ -1,5 +1,11 @@
 using UnityEngine;
 
+// =====================================================================================
+// DERS GEREKSİNİMİ: OYUN İÇİ MENÜ (In-game menu)
+// Ne yapar: Oyun sırasında ESC ile açılır, oyunu dondurur (Time.timeScale = 0).
+// İçerik: DEVAM ET, ANA MENÜ, MÜZİK ve SES EFEKTLERİ ses ayarı (0-10), OYUNDAN ÇIK.
+// Ses ayarları PlayerPrefs ile kaydedilir; oyun kapansa da hatırlanır.
+// =====================================================================================
 /// <summary>
 /// Duraklatma menüsü (ESC). Yerleşim: başlık, ölüm / ruh satırı, önce DEVAM ET ve ANA MENÜ (en sık kullanılanlar),
 /// sonra MÜZİK ve SES EFEKTLERİ ses satırları, en altta ayrık duran OYUNDAN ÇIK (yanlışlıkla basılmasın diye).
@@ -42,6 +48,7 @@ public class LdrDuraklat : MonoBehaviour
         else if (Acilabilir()) Ac();
     }
 
+    // Menüyü açar ve oyunu dondurur (Time.timeScale = 0).
     void Ac()
     {
         Acik = true;
@@ -49,6 +56,7 @@ public class LdrDuraklat : MonoBehaviour
         oyun.yasayan.Donuk = true;                       // duraklatma tıklaması ateş etmesin
     }
 
+    // Menüyü kapatır ve oyunu kaldığı yerden devam ettirir (Time.timeScale = 1).
     void Devam()
     {
         Acik = false;
@@ -95,6 +103,7 @@ public class LdrDuraklat : MonoBehaviour
         return Tiklandi(r);
     }
 
+    // Bir ses ayarı satırı çizer (- / + düğmeleri ve 10 bölmeli çubuk); yeni değeri döndürür.
     /// <summary>[-] ▮▮▮▮▮▯▯▯▯▯ [+] biçiminde ses satırı; yeni değeri döndürür.</summary>
     int SesSatiri(float x, float y, float w, float sc, string baslik, int deger)
     {

@@ -6,6 +6,7 @@ using UnityEngine;
 /// Kalıcı ilerleme: toplam ruh, en derin bölüm, seçili karakter/silah, görülen silahlar ve puan tablosu.
 /// (Ölüm sayısını LiveDieRepeat tutar, kaçış parçalarını LdrParca.)
 /// </summary>
+// [Mekanik 1] Kalıcı ilerleme: tüm değerler PlayerPrefs ile diske yazılır, oyun kapansa da kalır.
 public static class LdrIlerleme
 {
     const string RuhAnahtari = "LDR_Souls";
@@ -34,6 +35,8 @@ public static class LdrIlerleme
         }
     }
 
+    // Bu yaşamın ruhunu kalıcı toplama ekler (silah kilitleri bu toplamla açılır).
+    // long'u string olarak saklıyoruz çünkü PlayerPrefs.SetInt 32 bit; ruh çok büyüyebilir.
     public static void RuhEkle(long n)
     {
         if (n <= 0) return;
@@ -44,6 +47,7 @@ public static class LdrIlerleme
     // ---------------- en derin bölüm (0 tabanlı)
     public static int EnDerin { get { return PlayerPrefs.GetInt(EnDerinAnahtari, 0); } }
 
+    // Ulaşılan en derin bölümü kaydeder (Bölüm Seç menüsü buna göre açılır).
     public static void DerinlikBildir(int idx)
     {
         if (idx <= EnDerin) return;
@@ -107,6 +111,7 @@ public static class LdrIlerleme
         return l;
     }
 
+    // Puan tablosuna yeni kayıt ekler, büyükten küçüğe sıralar, en iyi 100'ü tutar.
     public static void PuanEkle(string isim, string bolum, long puan)
     {
         if (puan <= 0) return;
@@ -141,24 +146,34 @@ public static class LdrIlerleme
 /// Düşman ölünce ruh += düşmanın başlangıç canı x zincir. İsabetli her mermi zinciri 1 artırır;
 /// boşa giden mermi 2 düşürür (1..25): dikkatli nişan almak ödüllendirilir.
 /// </summary>
+// =====================================================================================
+// MEKANİK 2: RUH ZİNCİRİ (puan çarpanı)  (Hülya Ceren Lüleci)
+// İsabet: zincir +1   |   Iska (duvara çarpan ya da menzilden çıkan mermi): zincir -2
+// Zincir 1 ile 25 arasında tutulur. Düşman ölünce: ruh += düşmanın başlangıç canı x zincir.
+// Neden -2? Iska cezası isabet ödülünden büyük olsun ki rastgele sıkmak değil, dikkatli nişan kazandırsın.
+// Çağrıldığı yerler: LdrMermi (isabet/ıska), LdrDusman.Oldu (Kazan), LdrHud (ekranda gösterim).
+// =====================================================================================
 public static class LdrPuan
 {
-    public static long Ruh { get; private set; }
-    public static int Zincir { get; private set; }
-    public static event System.Action Degisti;
+    public static long Ruh { get; private set; }    // bu yaşamda toplanan ruh (puan)
+    public static int Zincir { get; private set; }  // şu anki çarpan (1..25)
+    public static event System.Action Degisti;      // değer değişince HUD'u güncellemek için
 
+    // Her yeni yaşamın başında: ruh 0, zincir 1.
     public static void Sifirla()
     {
         Ruh = 0; Zincir = 1;
         if (Degisti != null) Degisti();
     }
 
+    // Düşman öldüğünde çağrılır: taban = düşmanın başlangıç canı; zincirle çarpılıp ruha eklenir.
     public static void Kazan(int taban)
     {
         Ruh += (long)taban * Mathf.Max(1, Zincir);
         if (Degisti != null) Degisti();
     }
 
+    // artir = true -> isabet (+1), false -> ıska (-2). Mathf.Clamp sonucu 1 ile 25 arasında tutar.
     public static void ZincirDegistir(bool artir)
     {
         Zincir = Mathf.Clamp(Zincir + (artir ? 1 : -2), 1, 25);

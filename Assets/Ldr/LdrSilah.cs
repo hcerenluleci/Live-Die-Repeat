@@ -1,5 +1,9 @@
 using UnityEngine;
 
+// =====================================================================================
+// SİLAH: şarjör, yedek mermi, ateş aralığı, sapma, pompalı (birden çok mermi), yeniden doldurma (R).
+// Değerler LdrSilahTablosu'ndan gelir; oyuncu Silah Pazarı'nda seçtiği silahla başlar.
+// =====================================================================================
 /// <summary>
 /// Silah. Ayarlar LdrSilahTablosu'ndan gelir: şarjör + yedek mermi, ateş aralığı,
 /// ön şarj (basılı tutunca ilk atıştan önce bekleme), sapma, pellet sayısı, yeniden doldurma.
@@ -93,6 +97,7 @@ public class LdrSilah : MonoBehaviour
         Tak(ac ? LdrSilahTablosu.Oyuncu.Find(s => s.anahtar == "golge") : secili);
     }
 
+    // Bir atış yapar: mermi(leri) oluşturur, namlu efekti ve ses çalar, şarjörden düşer.
     /// <summary>Tetik basılıyken her karede çağrılır. Ateş edildiyse true.</summary>
     public bool AtesEt(Vector2 namlu, Vector2 yon)
     {

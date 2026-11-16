@@ -1,6 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// =====================================================================================
+// DERS GEREKSİNİMİ: SES (menüde en az 1, oyunda en az 2)
+// Oyun içi efektler: ateş, şarjör, eşya alma, kapı, masa sürükleme, düşman vuruş/ölüm, oyuncu hasar/ölüm.
+// Menü: sfx_ui_click. Seviye duraklatma menüsündeki SES EFEKTLERİ ayarından gelir.
+// =====================================================================================
 /// <summary>
 /// Ses çalar. Sesler Assets/Resources içindeki takımın kendi dosyalarıdır:
 /// sfx_shoot, sfx_reload, sfx_pickup, sfx_door, sfx_drag, sfx_enemy_hit, sfx_enemy_death, sfx_player_death, sfx_player_hurt, sfx_ui_click.
@@ -40,6 +45,7 @@ public static class LdrSes
         return c;
     }
 
+    // Resources klasöründen sesi yükler (bir kez, sonra önbellekten) ve verilen ses seviyesi/perdeyle çalar.
     public static void Cal(string ad, float ses = 1f, float perde = 1f)
     {
         var c = Yukle(ad);
@@ -59,6 +65,7 @@ public static class LdrSes
 
     /// <summary>Aynı sesin çok sık üst üste binmemesi için küçük bekleme.</summary>
     static readonly Dictionary<string, float> son = new Dictionary<string, float>();
+    // Aynı ses çok sık tekrar etmesin diye en az "aralik" saniye arayla çalar (örn. masa sürükleme).
     public static void CalSeyrek(string ad, float aralik, float ses = 1f, float perde = 1f)
     {
         float t;

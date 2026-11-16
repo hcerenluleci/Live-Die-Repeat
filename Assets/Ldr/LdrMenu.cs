@@ -2,6 +2,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+// =====================================================================================
+// DERS GEREKSİNİMİ: ANA MENÜ (Main Menu)
+// Ne yapar: Oyun açılınca ana menüyü çizer: OYNA, NASIL OYNANIR, BÖLÜM SEÇ, PUAN TABLOSU, ÇIKIŞ.
+// Akış: Ana menü -> Karakter seçimi (Liz/Jan) -> Silah Pazarı -> oyun. Ölünce yine Pazar ekranına döner.
+// Nasıl çizilir: Unity IMGUI (OnGUI) ile, LdrUI araç kutusu ve kendi piksel fontumuzla; ayrı bir sahne yok.
+// Menü sesi: düğmelerde sfx_ui_click, arkada korku müziği (LdrMuzik) -> "menüde en az 1 ses" gereksinimi.
+// =====================================================================================
 /// <summary>
 /// Menü akışı. "LdrOyun" sahnesinin üstüne çizilir (sahne ayrıca değişmez):
 ///   ANA MENÜ (OYNA / NASIL OYNANIR / BÖLÜM SEÇ / PUAN TABLOSU / ÇIKIŞ)  ->  KARAKTER SEÇ (oturumda bir kez)  ->  SİLAH PAZARI  ->  oyun.
@@ -97,6 +104,7 @@ public class LdrMenu : MonoBehaviour
         Time.timeScale = Acik ? 0f : 1f;
     }
 
+    // Ölüm olayını dinler: bu yaşamın ruhunu kalıcı toplama ekler, puan tablosuna yazar, ölüm özetini hazırlar.
     void OlumOldu()
     {
         long kazanilan = LdrPuan.Ruh;
@@ -110,6 +118,7 @@ public class LdrMenu : MonoBehaviour
     }
 
     // ---------------------------------------------------------------- akış
+    // Menüyü kapatıp oyunu başlatır.
     void OyunaGec()
     {
         // seçilen bölüm ve silahla sahneyi yeniden kur
@@ -128,6 +137,7 @@ public class LdrMenu : MonoBehaviour
         if (Gecerli == Sayfa.Pazar) PazarHazirla();
     }
 
+    // Seçilen karakteri (0 = Liz, 1 = Jan) kaydeder ve Silah Pazarı ekranına geçer.
     void KarakterSec(int k)
     {
         LdrIlerleme.Karakter = k;
@@ -295,6 +305,7 @@ public class LdrMenu : MonoBehaviour
     void Isik(Vector2 c, float boyut, Color renk) { LdrUI.Light(c, boyut, renk); }
 
     // ---------------------------------------------------------------- OnGUI
+    // Her karede o anki menü sayfasını (Ana, Karakter, Pazar, Bölümler, Puanlar, Yardım) çizer ve tıklamaları işler.
     void OnGUI()
     {
         if (!OyunSahnesiMi()) return;

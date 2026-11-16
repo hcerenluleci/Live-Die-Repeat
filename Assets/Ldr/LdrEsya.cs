@@ -4,6 +4,10 @@ using UnityEngine.Rendering.Universal;
 
 public enum LdrEsyaTuru { Boguruten, Uzum, Kalkan, Cephane, Ates, Kasa }
 
+// =====================================================================================
+// YARDIM EŞYALARI: mor böğürtlen (12 sn güç), can üzümü (+1 kalp), gölge kalkanı (8 sn dokunulmazlık),
+// cephane (8 sn sınırsız), silah kasası (20 sn pompalı), ateş topu (F, en çok 6). Temizlenen oda ve kırılan fıçılardan düşer.
+// =====================================================================================
 /// <summary>
 /// Yardım eşyaları:
 ///   Mor böğürtlen: 12 sn güç (hasar x2, daha sık ateş)      Can üzümü: +1 can
